@@ -1,14 +1,15 @@
-version: '3'
-
 services:
+  # ===========================================
+  # INFLUXDB - aegreade andmebaas
+  # ===========================================
   influxdb:
-    image: influxdb:latest
+    image: influxdb:2.7
     container_name: influxdb
-    restart: always
+    restart: unless-stopped
     ports:
-      - "8086:8086"
+      - "8086:8086"           # UI ja API port
     volumes:
-      - ./influxdb:/var/lib/influxdb2
+      - influxdb-data:/var/lib/influxdb2    # Andmed säilivad ka peale restart'i
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=${DOCKER_INFLUXDB_INIT_MODE}
       - DOCKER_INFLUXDB_INIT_USERNAME=${DOCKER_INFLUXDB_INIT_USERNAME}
@@ -17,84 +18,49 @@ services:
       - DOCKER_INFLUXDB_INIT_BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
     networks:
-      - monitoring_net
+      - monitoring
 
+  # ===========================================
+  # TELEGRAF - andmete koguja
+  # ===========================================
   telegraf:
-    image: telegraf:latest
+    image: telegraf:1.28
     container_name: telegraf
-    restart: always
+    restart: unless-stopped
     volumes:
-      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - ./flask-app/logs:/app/logs:ro
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro  # Konfig (read-only)
+      - /var/run/docker.sock:/var/run/docker.sock:ro             # Docker info lugemine
+      - ./flask-app/logs:/app/logs:ro                            # Flask logide lugemine
     environment:
       - INFLUX_TOKEN=${INFLUX_TOKEN}
-      - INFLUX_ORG=${DOCKER_INFLUXDB_INIT_ORG}
-      - INFLUX_BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}
+      - INFLUX_ORG=${INFLUX_ORG}
+      - INFLUX_BUCKET=${INFLUX_BUCKET}
     group_add:
-      - "${DOCKER_GID:-999}"
+      - "${DOCKER_GID}"       # Lisa docker grupp
     depends_on:
-      - influxdb
+      - influxdb              # Oota, kuni InfluxDB on üleval
     networks:
-      - monitoring_net
+      - monitoring
 
-  chronograf:
-    image: chronograf:latest
-    container_name: chronograf
-    restart: always
-    ports:
-      - "8888:8888"
-    volumes:
-      - ./chronograf:/var/lib/chronograf
-    depends_on:
-      - influxdb
-    environment:
-      - INFLUXDB_URL=http://influxdb:8086
-      - INFLUXDB_TOKEN=${INFLUX_TOKEN}
-      - INFLUXDB_ORG=${DOCKER_INFLUXDB_INIT_ORG}
-    networks:
-      - monitoring_net
-
-  kapacitor:
-    image: kapacitor:latest
-    container_name: kapacitor
-    restart: always
-    volumes:
-      - ./kapacitor/kapacitor.conf:/etc/kapacitor/kapacitor.conf:ro
-    depends_on:
-      - influxdb
-    networks:
-      - monitoring_net
-
+  # ===========================================
+  # FLASK APP - rakendus, mida monitoorime
+  # ===========================================
   flask-app:
-    build: ./flask-app
+    build: ./flask-app        # Ehita Dockerfile'ist
     container_name: flask-app
-    restart: always
-    volumes:
-      - ./flask-app:/app
-      - ./flask-app/logs:/app/logs
-    environment:
-      - FLASK_ENV=${FLASK_ENV}
-      - LOG_LEVEL=${LOG_LEVEL}
-    networks:
-      - monitoring_net
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    restart: always
+    restart: unless-stopped
     ports:
-      - "80:80"
+      - "5000:5000"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-    depends_on:
-      - flask-app
-      - chronograf
+      - ./flask-app/logs:/app/logs    # Logid - Flask kirjutab, Telegraf loeb
     networks:
-      - monitoring_net
+      - monitoring
 
+# Kõik konteinerid samas võrgus - näevad üksteist nimepidi
 networks:
-  monitoring_net:
+  monitoring:
     driver: bridge
+
+# Püsiv andmeruum InfluxDB jaoks
+volumes:
+  influxdb-data:

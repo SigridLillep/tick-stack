@@ -1,16 +1,12 @@
-FROM python:3.9-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY app.py .
 
-# Create logs directory if it doesn't exist
-RUN mkdir -p /app/logs && touch /app/logs/app.log && chmod 666 /app/logs/app.log
-
-ENV FLASK_APP=app.py
-ENV FLASK_ENV=production
+RUN mkdir -p /app/logs && chmod 777 /app/logs
 
 CMD ["python", "app.py"]

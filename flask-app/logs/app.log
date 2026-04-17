@@ -1,0 +1,27 @@
+2026-04-17 12:06:01,448 INFO Chuck Norris Monitor käivitub...
+2026-04-17 12:06:01,451 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.18.0.2:5000
+2026-04-17 12:06:01,451 INFO [33mPress CTRL+C to quit[0m
+2026-04-17 12:06:10,012 INFO 172.18.0.4 - - [17/Apr/2026 12:06:10] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:06:20,007 INFO 172.18.0.4 - - [17/Apr/2026 12:06:20] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:06:30,004 INFO 172.18.0.4 - - [17/Apr/2026 12:06:30] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:06:40,005 INFO 172.18.0.4 - - [17/Apr/2026 12:06:40] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:06:50,005 INFO 172.18.0.4 - - [17/Apr/2026 12:06:50] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:07:00,004 INFO 172.18.0.4 - - [17/Apr/2026 12:07:00] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:07:10,006 INFO 172.18.0.4 - - [17/Apr/2026 12:07:10] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:07:20,004 INFO 172.18.0.4 - - [17/Apr/2026 12:07:20] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:07:30,004 INFO 172.18.0.4 - - [17/Apr/2026 12:07:30] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:07:40,005 INFO 172.18.0.4 - - [17/Apr/2026 12:07:40] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:07:50,005 INFO 172.18.0.4 - - [17/Apr/2026 12:07:50] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:08:00,004 INFO 172.18.0.4 - - [17/Apr/2026 12:08:00] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:08:10,004 ERROR Health check failed
+2026-04-17 12:08:10,004 INFO 172.18.0.4 - - [17/Apr/2026 12:08:10] "[35m[1mGET /health HTTP/1.1[0m" 500 -
+2026-04-17 12:08:20,005 INFO 172.18.0.4 - - [17/Apr/2026 12:08:20] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:08:30,004 ERROR Health check failed
+2026-04-17 12:08:30,005 INFO 172.18.0.4 - - [17/Apr/2026 12:08:30] "[35m[1mGET /health HTTP/1.1[0m" 500 -
+2026-04-17 12:08:40,006 INFO 172.18.0.4 - - [17/Apr/2026 12:08:40] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:08:50,006 INFO 172.18.0.4 - - [17/Apr/2026 12:08:50] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:09:00,006 INFO 172.18.0.4 - - [17/Apr/2026 12:09:00] "GET /health HTTP/1.1" 200 -
+2026-04-17 12:09:10,006 INFO 172.18.0.4 - - [17/Apr/2026 12:09:10] "GET /health HTTP/1.1" 200 -
